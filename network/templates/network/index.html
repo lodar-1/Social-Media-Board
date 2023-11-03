@@ -1,0 +1,45 @@
+{% extends "network/layout.html" %}
+{% load static %}
+{% block body %}
+ <div id='divadd' class="container">
+ <br/>
+ <h1 id="Head">All Posts</h1>
+ <br/>
+	 <form id='newpost'></form> <!--action="{%url 'new' %}" method="post" --> 
+<!--
+		 {% csrf_token %}
+-->
+<!--
+		<label id='lblPost' class="label label-default">New Post</label>
+-->
+		<div id="postdiv" style="text-align: bottom"> <textarea id="txtPost" name='content' placeholder='New Post' ></textarea>
+		<br/>
+			<div>
+				<input type='button' id='btnNew'  class="btn btn-primary" value='Post' onclick='newpost(this);'/> &nbsp;  
+				<button id=bntCancel onclick="cancelEdit();" class="btn btn-primary value="cancel" style="display: none;">Cancel</button>
+			</div>
+		</div>	
+	  </form>
+ </div>
+<div id="posts-list" class="container">
+	<div class="row posthead">
+		<div class="col-sm h6">
+		</div>
+		<div class="col-sm h6">
+		</div>
+		<div class="col-sm h6 colright">
+		</div>
+	</div>		
+</div>
+<input type="hidden" id="ProfileURL" data-url="{% url 'profile' userid=-9999 %}" />
+<input type="hidden" id="following" data-following={{ following }} />
+
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		load_posts();
+	})
+</script>
+
+{% endblock %}
+
+

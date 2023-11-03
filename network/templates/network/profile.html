@@ -1,0 +1,35 @@
+{% extends "network/layout.html" %}
+{% load static %}
+{% block body %}
+	    <div align=center><h1>Profile: {{ user }}</h1></div>
+	    <div class="container profile-container">
+			<div class="profile-item3">Followers:&nbsp; </div><div class="profile-item4" id="divFollow">{{ followers }}</div>
+			<div class="profile-item5">Followed:&nbsp; </div><div class="profile-item6" id="divFollowed">{{ followed }}</div>
+		</div>
+	    {% if userid != currentuser %}
+			<div align=center>
+				{% if not isfollowing %}
+					<button id="btnFollow" class="btn btn-primary" data-follow=1 data-userid={{ userid }} data-currentuserid={{ currentuser }} onclick="toggleFollow(this);">Follow</button>
+				{% else %}
+					<button id="btnFollow" class="btn btn-primary" data-follow=0 data-userid={{ userid }} data-currentuserid={{ currentuser }} onclick="toggleFollow(this);">Unfollow</button>
+				{% endif %}	
+			</div>
+		{% endif %}	
+		
+		<div id="posts-list" class="container">
+			<div class="row posthead">
+				<div class="col-sm h6">
+				</div>
+				<div class="col-sm h6">
+				</div>
+				<div class="col-sm h6 colright">
+				</div>
+			</div>		
+		</div>	
+
+		<script>document.addEventListener('DOMContentLoaded', function() {
+					 load_userposts({{userid}});
+				})
+		</script>	
+{% endblock %}
+
