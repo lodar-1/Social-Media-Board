@@ -20,7 +20,7 @@ def index(request):
 		
 
 def posts(request, userby = None):
-	print(request.path)
+	# ~ print(request.path)
 	if userby:
 		posts = returnPosts(request.user.id, userby)
 	else:
@@ -135,3 +135,12 @@ def profile(request, userid):
 		return render(request, "network/profile.html", {
 			"message": "An error occured, please try again."})
 			
+def following(request):
+	return index(request)
+	
+def loadfollowing(request):
+	posts = returnPosts(request.user.id, following=True)
+	for post in posts:
+		post['currentuser'] = request.user.id
+	return JsonResponse(posts, safe=False)
+	

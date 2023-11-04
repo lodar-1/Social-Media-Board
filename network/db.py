@@ -9,23 +9,40 @@ def dictfetchall(cursor):
     
 
 
-def returnPosts (userid = -1, byuserid = None):
+def returnPosts (userid = -1, byuserid = None, following=False):
 	cursor = connection.cursor()
-	if not byuserid:
-		q= f"""select p.id, p.content, strftime('%Y-%m-%d %H:%M:%S',p.post_date) post_date, p.user_id, u.username, count(l.post_id) likes, l2.post_id liked
-				from network_post p inner join network_user u on p.user_id = u.id
-				left join network_likes l on l.post_id = p.id
-				left join network_likes l2 on l2.post_id = p.id and l2.user_id = {userid}
-				group by p.id,p.content,p.post_date,p.user_id,u.username
-				order by p.id desc"""
+	if not following:
+		if not byuserid:
+			if userid is not None:
+				q= f"""select p.id, p.content, strftime('%Y-%m-%d %H:%M:%S',p.post_date) post_date, p.user_id, u.username, count(l.post_id) likes, l2.post_id liked
+						from network_post p inner join network_user u on p.user_id = u.id
+						left join network_likes l on l.post_id = p.id
+						left join network_likes l2 on l2.post_id = p.id and l2.user_id = {userid}
+						group by p.id,p.content,p.post_date,p.user_id,u.username
+						order by p.id desc"""
+			else:
+				q= f"""select p.id, p.content, strftime('%Y-%m-%d %H:%M:%S',p.post_date) post_date, p.user_id, u.username, count(l.post_id) likes
+						from network_post p inner join network_user u on p.user_id = u.id
+						left join network_likes l on l.post_id = p.id
+						group by p.id,p.content,p.post_date,p.user_id,u.username
+						order by p.id desc"""
+							
+		else:
+			q= f"""select p.id, p.content, strftime('%Y-%m-%d %H:%M:%S',p.post_date) post_date, p.user_id, u.username, count(l.post_id) likes, l2.post_id liked
+					from network_post p inner join network_user u on p.user_id = u.id
+					left join network_likes l on l.post_id = p.id
+					left join network_likes l2 on l2.post_id = p.id and l2.user_id = {userid}
+					where p.user_id = {byuserid}
+					group by p.id,p.content,p.post_date,p.user_id,u.username
+					order by p.id desc"""
 	else:
-		q= f"""select p.id, p.content, strftime('%Y-%m-%d %H:%M:%S',p.post_date) post_date, p.user_id, u.username, count(l.post_id) likes, l2.post_id liked
-				from network_post p inner join network_user u on p.user_id = u.id
-				left join network_likes l on l.post_id = p.id
-				left join network_likes l2 on l2.post_id = p.id and l2.user_id = {userid}
-				where p.user_id = {byuserid}
-				group by p.id,p.content,p.post_date,p.user_id,u.username
-				order by p.id desc"""
+		q= f"""select p.id, p.content, strftime('%Y-%m-%d %H:%M:%S',p.post_date) post_date, p.user_id, u.username, count(l.post_id) likes
+						from network_post p inner join network_user u on p.user_id = u.id
+						left join network_likes l on l.post_id = p.id
+                        inner join network_follow f on f.user_id = {userid} and f.following_id = p.user_id 
+						group by p.id,p.content,p.post_date,p.user_id,u.username
+						order by p.id desc"""
+	# ~ print(q)
 	cursor.execute(q)
 	result = dictfetchall(cursor)
 	cursor.close()		

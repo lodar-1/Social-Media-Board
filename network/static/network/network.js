@@ -18,20 +18,33 @@ function getCookie(name) {
 }
 
 function load_posts() {
-	if(document.getElementById("following").getAttribute("data-following")){
+
+	let follow = false; 
+	if(document.getElementById("following").getAttribute("data-following") == 'True'){
 		document.getElementById("Head").innerHTML = "Following"
+		follow = true;
 	}
 	else{
 		document.getElementById("Head").innerHTML = "All Posts";	
 	}
 	x = document.querySelector('#posts-list');
 	if(x){	
-		x.innerHTML = "";
-		fetch('/posts')
-		.then(response => response.json())
-		.then(posts => {
-			posts.forEach(function(post) {disaply_post(post, false)});
-			});
+		if(follow){
+			x.innerHTML = "";
+			fetch('/loadfollowing')
+			.then(response => response.json())
+			.then(posts => {
+				posts.forEach(function(post) {disaply_post(post, false)});
+				});			
+		}
+		else{
+			x.innerHTML = "";
+			fetch('/posts')
+			.then(response => response.json())
+			.then(posts => {
+				posts.forEach(function(post) {disaply_post(post, false)});
+				});
+		}
 	}		
 }
 function load_userposts(userid) {
@@ -63,10 +76,12 @@ function disaply_post(post, isprofile){
 		datalike = 1;
 	}	
 	let likeml = "";		
-	if(post.currentuser != post.user_id)
-		likeml = `<a id='like' href=# data-like="${datalike}" data-postid="${post.id}" onclick="toggleLike(this);">${liketype}</a>`
-	else
-		likeml = `<a id='like' href=# data-postid="${post.id}" onclick="edit(this);">Edit</a>`
+	if((post.currentuser) != null){
+		if(post.currentuser != post.user_id)
+			likeml = `<a id='like' href=# data-like="${datalike}" data-postid="${post.id}" onclick="toggleLike(this);">${liketype}</a>`
+		else
+			likeml = `<a id='like' href=# data-postid="${post.id}" onclick="edit(this);">Edit</a>`
+	}	
 	let namelink = "";
 	if (isprofile){
 		namelink = post.username;
@@ -174,8 +189,8 @@ function edit(element){
 			})
 	btn = document.getElementById('btnNew');
 	btn.onClick="editpost(this);";
-	btn.value = "Edit";
-	document.getElementById("bntCancel").style.display = "block";
+	btn.value = "Save";
+	document.getElementById("bntCancel").style.display = "inline-block";
 	localStorage.setItem("PostID", postid);
 	return false;		
 }
@@ -209,6 +224,7 @@ function editpost(element){
 		element.onClick = "newpost(this);"
 		document.getElementById("txtPost").value = "";
 		document.getElementById("btnNew").value ="Post";
+		document.getElementById('bntCancel').style.display = "none"
 		//~ document.getElementById("lblPost").innerHTML = 'New Post';
 		load_posts();
 		})

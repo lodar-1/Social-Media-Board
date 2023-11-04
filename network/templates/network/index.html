@@ -12,14 +12,14 @@
 <!--
 		<label id='lblPost' class="label label-default">New Post</label>
 -->
-		<div id="postdiv" style="text-align: bottom"> <textarea id="txtPost" name='content' placeholder='New Post' ></textarea>
+<div id="postdiv" style="text-align: bottom;"> <textarea id="txtPost" name='content' placeholder='New Post' ></textarea>
 		<br/>
-			<div>
-				<input type='button' id='btnNew'  class="btn btn-primary" value='Post' onclick='newpost(this);'/> &nbsp;  
-				<button id=bntCancel onclick="cancelEdit();" class="btn btn-primary value="cancel" style="display: none;">Cancel</button>
+			<div style="display:inline-block; white-space: nowrap">
+				<input type='button' id='btnNew'  class="btn btn-primary" value='Post' onclick='newpost(this);'/>
+				<button id="bntCancel" onclick="cancelEdit();" class="btn btn-primary" value="cancel" style="display: none;">Cancel</button>
 			</div>
 		</div>	
-	  </form>
+	 
  </div>
 <div id="posts-list" class="container">
 	<div class="row posthead">
