@@ -16,8 +16,19 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+function loadpage(pagetype){
+	if(pagetype == "prev"){
+		page = document.getElementById("pageprev").getAttribute("data-page");
+	}	
+	else{
+		page = document.getElementById("pagenext").getAttribute("data-page");
+	}
+	load_posts(page);
+	document.getElementById("pageprev").setAttribute("data-page", (parseInt(page) - 1).toString())
+	document.getElementById("pagenext").setAttribute("data-page", (parseInt(page) + 1).toString())
+}
 
-function load_posts() {
+function load_posts(page = 1) {
 
 	let follow = false; 
 	if(document.getElementById("following").getAttribute("data-following") == 'True'){
@@ -31,7 +42,7 @@ function load_posts() {
 	if(x){	
 		if(follow){
 			x.innerHTML = "";
-			fetch('/loadfollowing')
+			fetch('/loadfollowing/'+page.toString())
 			.then(response => response.json())
 			.then(posts => {
 				posts.forEach(function(post) {disaply_post(post, false)});
@@ -39,7 +50,7 @@ function load_posts() {
 		}
 		else{
 			x.innerHTML = "";
-			fetch('/posts')
+			fetch('/posts/page/'+page.toString())
 			.then(response => response.json())
 			.then(posts => {
 				posts.forEach(function(post) {disaply_post(post, false)});
@@ -225,7 +236,6 @@ function editpost(element){
 		document.getElementById("txtPost").value = "";
 		document.getElementById("btnNew").value ="Post";
 		document.getElementById('bntCancel').style.display = "none"
-		//~ document.getElementById("lblPost").innerHTML = 'New Post';
 		load_posts();
 		})
 	return false;

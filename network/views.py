@@ -8,8 +8,11 @@ from datetime import datetime
 from .models import User, Post
 from django.http import JsonResponse
 from .db import *
+from django.core.paginator import Paginator
 
 from django.views.decorators.csrf import csrf_exempt
+
+itemsPerPage = 10
 
 def index(request):
 	# ~ posts = Post.objects.all()
@@ -19,8 +22,13 @@ def index(request):
 		return render(request, "network/index.html", {"following": False})
 		
 
-def posts(request, userby = None):
-	# ~ print(request.path)
+def posts(request, userby = None, page = 1):
+	# ~ try:
+		# ~ data = json.loads(request.body)
+		# ~ page = date.get("page")
+	# ~ except:
+		# ~ pass	
+
 	if userby:
 		posts = returnPosts(request.user.id, userby)
 	else:
@@ -28,7 +36,9 @@ def posts(request, userby = None):
 	# ~ APPEND CURRENT USERID TO DICT
 	for post in posts:
 		post['currentuser'] = request.user.id
-	return JsonResponse(posts, safe=False)
+	paginator = Paginator(posts, itemsPerPage)
+	page = paginator.get_page(page)
+	return JsonResponse(page.object_list, safe=False)
 
 def login_view(request):
 	if request.method == "POST":
@@ -120,6 +130,8 @@ def like(request):
 
 def post(request, postid):
 	post1 = returnPost(postid)
+	# ~ paginator = Paginator(post1, itemsPerPage)
+	# ~ page = paginator.get_page(page)	
 	return JsonResponse(post1, safe=False)	
 	
 def profile(request, userid):
@@ -138,9 +150,11 @@ def profile(request, userid):
 def following(request):
 	return index(request)
 	
-def loadfollowing(request):
+def loadfollowing(request, page=1):
 	posts = returnPosts(request.user.id, following=True)
 	for post in posts:
 		post['currentuser'] = request.user.id
-	return JsonResponse(posts, safe=False)
+	paginator = Paginator(posts, itemsPerPage)
+	page = paginator.get_page(page)	
+	return JsonResponse(page.object_list, safe=False)
 	
