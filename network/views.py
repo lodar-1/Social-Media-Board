@@ -14,7 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 itemsPerPage = 10
 
-def index(request):
+def index(request, pagecount=1):
 	# ~ posts = Post.objects.all()
 	if "following" in request.path:
 		return render(request, "network/index.html", {"following": True})
@@ -38,6 +38,8 @@ def posts(request, userby = None, page = 1):
 		post['currentuser'] = request.user.id
 	paginator = Paginator(posts, itemsPerPage)
 	page = paginator.get_page(page)
+	pagecount = paginator.num_pages
+	page.object_list[0]["pagecount"] = pagecount	
 	return JsonResponse(page.object_list, safe=False)
 
 def login_view(request):
@@ -156,5 +158,7 @@ def loadfollowing(request, page=1):
 		post['currentuser'] = request.user.id
 	paginator = Paginator(posts, itemsPerPage)
 	page = paginator.get_page(page)	
+	pagecount = paginator.num_pages
+	page.object_list[0]["pagecount"] = pagecount
 	return JsonResponse(page.object_list, safe=False)
 	

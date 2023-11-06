@@ -45,7 +45,20 @@ function load_posts(page = 1) {
 			fetch('/loadfollowing/'+page.toString())
 			.then(response => response.json())
 			.then(posts => {
-				posts.forEach(function(post) {disaply_post(post, false)});
+				posts.forEach(function(post) {disaply_post(post, false);});
+				document.querySelector('#pageno').innerHTML = "Page " + page.toString() + " of " + posts[0].pagecount;
+				if(page.toString() == posts[0].pagecount){
+					document.querySelector("#pagenext").style.pointerEvents = "none";
+				}
+				else{
+					document.querySelector("#pagenext").style.pointerEvents = "";
+				}
+				if(page == 1){
+					document.querySelector("#pageprev").style.pointerEvents = "none";
+				}
+				else{
+					document.querySelector("#pageprev").style.pointerEvents = "";
+				}				
 				});			
 		}
 		else{
@@ -54,6 +67,19 @@ function load_posts(page = 1) {
 			.then(response => response.json())
 			.then(posts => {
 				posts.forEach(function(post) {disaply_post(post, false)});
+				document.querySelector('#pageno').innerHTML = "Page " + page.toString() + " of " + posts[0].pagecount;
+				if(page.toString() == posts[0].pagecount){
+					document.querySelector("#pagenext").style.pointerEvents = "none";
+				}	
+				else{
+					document.querySelector("#pagenext").style.pointerEvents = "";
+				}							
+				if(page == 1){
+					document.querySelector("#pageprev").style.pointerEvents = "none";
+				}
+				else{
+					document.querySelector("#pageprev").style.pointerEvents = "";
+				}
 				});
 		}
 	}		
