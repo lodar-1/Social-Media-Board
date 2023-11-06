@@ -15,7 +15,6 @@ from django.views.decorators.csrf import csrf_exempt
 itemsPerPage = 10
 
 def index(request, pagecount=1):
-	# ~ posts = Post.objects.all()
 	if "following" in request.path:
 		return render(request, "network/index.html", {"following": True})
 	else:
@@ -23,12 +22,6 @@ def index(request, pagecount=1):
 		
 
 def posts(request, userby = None, page = 1):
-	# ~ try:
-		# ~ data = json.loads(request.body)
-		# ~ page = date.get("page")
-	# ~ except:
-		# ~ pass	
-
 	if userby:
 		posts = returnPosts(request.user.id, userby)
 	else:
@@ -125,15 +118,15 @@ def follow(request):
 def like(request):
 	try:
 		data = json.loads(request.body)
-		print(toggleLike(request.user.id, data.get("postid"), data.get("like")))
-		return index(request)
+		result = toggleLike(request.user.id, data.get("postid"), data.get("like"))
+		return JsonResponse(result, safe=False)
+		# ~ return index(request)
 	except Exception as e:
 		return index(request)	
 
 def post(request, postid):
 	post1 = returnPost(postid)
-	# ~ paginator = Paginator(post1, itemsPerPage)
-	# ~ page = paginator.get_page(page)	
+	
 	return JsonResponse(post1, safe=False)	
 	
 def profile(request, userid):

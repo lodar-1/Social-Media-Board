@@ -3,7 +3,7 @@
 {% block body %}
  <div id='divadd' class="container">
  <br/>
- <h1 id="Head">All Posts</h1>
+ <div class="container header"><h1 id="Head">All Posts</h1></div>
  <br/>
 	 <form id='newpost'></form> <!--action="{%url 'new' %}" method="post" --> 
 <!--
@@ -14,9 +14,9 @@
 -->
 <div id="postdiv" style="text-align: bottom;"> <textarea id="txtPost" name='content' placeholder='New Post' ></textarea>
 		<br/>
-			<div style="display:inline-block; white-space: nowrap">
-				<input type='button' id='btnNew'  class="btn btn-primary" value='Post' onclick='newpost(this);'/>
+			<div style="display:inline-block; white-space: nowrap; padding: 5px;">
 				<button id="bntCancel" onclick="cancelEdit();" class="btn btn-primary" value="cancel" style="display: none;">Cancel</button>
+				<input type='button' id='btnNew'  class="btn btn-primary" value='Post' onclick='newpost(this);'/>
 			</div>
 		</div>	
 	 

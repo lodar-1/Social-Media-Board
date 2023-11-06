@@ -51,7 +51,6 @@ def returnPosts (userid = -1, byuserid = None, following=False):
 
 def toggleLike (userid,postid, like=True):
 	cursor = connection.cursor()
-	# ~ print(f"UserID: {userid} PostID: {postid} Like: {like}")
 	if like != "0":
 		q=f"""insert into network_likes(post_id, user_id) 
 			values ({postid},{userid})"""
@@ -60,8 +59,15 @@ def toggleLike (userid,postid, like=True):
 		q=f"delete from network_likes where post_id = {postid} and user_id = {userid}"
 		# ~ print(q)
 	result = cursor.execute(q)
+# return post like count
+	q=f"select count(post_id) likes from network_likes where post_id = {postid}"	
+	cursor.execute(q)
+	result = dictfetchall(cursor)
 	cursor.close()	
-	return result
+#	sreturn = '{"result":"success"}'
+	return {
+			"likes": result[0]['likes']
+		}	
 
 def toggleFollow (userid, followuser, follow):
 	cursor = connection.cursor()

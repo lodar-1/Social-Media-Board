@@ -1,6 +1,16 @@
 body {
 	margin-bottom: 25px;
 }
+h1 {
+	font-weight: bold;
+/*
+	color: white;
+*/
+}
+.header {
+	background-color: #4d90fe;
+	text-align: center;
+}
 #postdiv {
 	border: 1px solid;
 	text-align: top;

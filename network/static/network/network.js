@@ -115,9 +115,10 @@ function disaply_post(post, isprofile){
 	let likeml = "";		
 	if((post.currentuser) != null){
 		if(post.currentuser != post.user_id)
-			likeml = `<a id='like' href=# data-like="${datalike}" data-postid="${post.id}" onclick="toggleLike(this);">${liketype}</a>`
-		else
-			likeml = `<a id='like' href=# data-postid="${post.id}" onclick="edit(this);">Edit</a>`
+			likeml = `<a id='like' href=#post${post.id} data-like="${datalike}" data-postid="${post.id}" onclick="toggleLike(this);">${liketype}</a>`
+		else 
+			if(isprofile == false)
+				likeml = `<a id='like' href=# data-postid="${post.id}" onclick="edit(this);">Edit</a>`
 	}	
 	let namelink = "";
 	if (isprofile){
@@ -128,13 +129,12 @@ function disaply_post(post, isprofile){
 	}
 		
 
-
 	x.innerHTML += `<div class="post">
 				<hr/>
 						<div class="grid-container">
 							<div class="item1 sm">by ${namelink} on ${postdate}</div>
 							<div class="item2 colright sm">${likeml}</div>
-							<div class="item3"> ${post.content} </div>
+							<div id="divcontent${post.id}" class="item3"> ${post.content} </div>
 							<div id="div${post.id}" class="item4 sm">likes: ${post.likes} </div>
 						</div>
 				
@@ -159,16 +159,19 @@ function disaply_post(post, isprofile){
 }
 
 function toggleLike(element){
+	//~ return false;
 	like = element.getAttribute('data-like');
 	fetch('/like', {
 		method: 'PUT',
+		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({
 			like: like,
 			postid: element.getAttribute('data-postid')
 		})
 	})
-	.then (setLike(element));
-	return false;
+	.then(response => response.json())
+	.then (data => setLike(element, data.likes)); //alert(likes.likes);return false;})
+	
 }	
 function toggleFollow(element){
 	followadd = element.getAttribute('data-follow');
@@ -198,22 +201,34 @@ function setFollow(element){
 		count -= 1;
 	}	
 	countdiv.innerHTML = count;	
+	return false;
 }
-function setLike(element){
-	like = element.getAttribute('data-like');
-	countdiv = document.getElementById('div'+element.getAttribute('data-postid'))
-	count = parseInt(countdiv.innerHTML);
-	if(like == 1){
-		element.setAttribute('data-like', 0);
+function setLike(element, likes){
+	countdiv = document.getElementById('div'+element.getAttribute('data-postid'));
+	countdiv.innerHTML = "likes " + likes;
+	if(element.innerHTML == 'Like'){
 		element.innerHTML = 'Unlike';
-		count += 1;
-	}
-	else{
-		element.setAttribute('data-like', 1);
-		element.innerHTML = 'Like';		
-		count -= 1;
+		element.setAttribute('data-like', 0)
 	}	
-	countdiv.innerHTML = count;
+	else{
+		element.innerHTML = 'Like';
+		element.setAttribute('data-like', 1);
+	}
+		
+	//~ like = element.getAttribute('data-like');
+	//~ countdiv = document.getElementById('div'+element.getAttribute('data-postid'))
+	//~ count = parseInt(countdiv.innerHTML);
+	//~ if(like == 1){
+		//~ element.setAttribute('data-like', 0);
+		//~ element.innerHTML = 'Unlike';
+		//~ count += 1;
+	//~ }
+	//~ else{
+		//~ element.setAttribute('data-like', 1);
+		//~ element.innerHTML = 'Like';		
+		//~ count -= 1;
+	//~ }	
+	//~ countdiv.innerHTML = count;
 
 }
 function edit(element){
@@ -221,7 +236,6 @@ function edit(element){
 	fetch(`/posts/${postid}`)
 		.then(response => response.json())
 		.then(post => {
-			//~ lblPost.innerHTML = 'Edit Post';
 			document.getElementById("txtPost").value = post.content;
 			})
 	btn = document.getElementById('btnNew');
@@ -245,7 +259,6 @@ function newpost(element){
 	headers: { "X-CSRFToken": token },	
 	})
 	.then (x => {document.getElementById("txtPost").value = "";load_posts();});
-	//load_posts();
 	return false;		
 }
 function editpost(element){
@@ -259,10 +272,12 @@ function editpost(element){
 	})
 	.then(post => {
 		element.onClick = "newpost(this);"
+		postElement = document.getElementById("divcontent"+localStorage.getItem("PostID"))
+		postElement.innerHTML = document.getElementById("txtPost").value;
 		document.getElementById("txtPost").value = "";
 		document.getElementById("btnNew").value ="Post";
 		document.getElementById('bntCancel').style.display = "none"
-		load_posts();
+		postElement.scrollIntoView();
 		})
 	return false;
 }
