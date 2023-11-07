@@ -9,8 +9,8 @@ from .models import User, Post
 from django.http import JsonResponse
 from .db import *
 from django.core.paginator import Paginator
-
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 itemsPerPage = 10
 
@@ -129,14 +129,14 @@ def post(request, postid):
 	
 	return JsonResponse(post1, safe=False)	
 	
+@login_required(login_url="/login")	
 def profile(request, userid):
 	try:
 		follows = returnFollow(int(userid))
 		isfollowing = returnIsFollowing(request.user.id, int(userid))
-		print(isfollowing)
 		return render(request, "network/profile.html", {
 					"user": follows.get("username"), "followers": follows.get("following"), "followed": follows.get("followed"), 
-					"userid": int(userid), "currentuser": request.user.id, "isfollowing": isfollowing
+					"userid": int(userid), "currentuser": request.user.id, "isfollowing": isfollowing, "following": True
 				})
 	except Exception as e:		
 		return render(request, "network/profile.html", {

@@ -28,7 +28,16 @@
 				</div>
 			</div>		
 		</div>	
-
+		<br/>
+		<div class="container">
+			<nav aria-label="Page navigation">
+			  <ul class="pagination">
+				<li class="page-item"><a id="pageprev" class="page-link" style="pointer-events: none;" href=# data-page="1" onclick="loadpage('prev');">Prev</a></li>
+				<li class="page-item"><a id="pageno" class="page-link" style="pointer-events: none;">Page 1 of 1</a></li>
+				<li class="page-item"><a id="pagenext" class="page-link" style="pointer-events: none;" href=# data-page="2" onclick="loadpage('next');">Next</a> </li>
+			  </ul>
+			</nav>
+		</div>
 		<script>document.addEventListener('DOMContentLoaded', function() {
 					 load_userposts({{userid}});
 				})

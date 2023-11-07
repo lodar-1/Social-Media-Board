@@ -12,18 +12,21 @@
 <!--
 		<label id='lblPost' class="label label-default">New Post</label>
 -->
-<div id="postdiv" style="text-align: bottom;"> <textarea id="txtPost" name='content' placeholder='New Post' ></textarea>
-		<br/>
-			<div style="display:inline-block; white-space: nowrap; padding: 5px;">
-				<button id="bntCancel" onclick="cancelEdit();" class="btn btn-primary" value="cancel" style="display: none;">Cancel</button>
-				<input type='button' id='btnNew'  class="btn btn-primary" value='Post' onclick='newpost(this);'/>
-			</div>
-		</div>	
-	 
+{% if request.user.is_authenticated %}
+	{% if following != 1 %}
+	<div id="postdiv" style="text-align: bottom;"> <textarea id="txtPost" name='content' placeholder='New Post' ></textarea>
+			<br/>
+				<div style="display:inline-block; white-space: nowrap; padding: 5px;">
+					<button id="bntCancel" onclick="cancelEdit();" class="btn btn-primary" value="cancel" style="display: none;">Cancel</button>
+					<input type='button' id='btnNew'  class="btn btn-primary" value='Post' onclick='newpost(this);'/>
+				</div>
+			</div>	
+	{% endif %}	 
+{% endif %}
  </div>
 <div id="posts-list" class="container">
 	<div class="row posthead">
-		<div class="col-sm h6">
+		<div class="col-sm h6">No posts found
 		</div>
 		<div class="col-sm h6">
 		</div>
@@ -46,11 +49,12 @@
 <!--
 style="pointer-events: none;" 
 -->
+
 <div class="container">
-	<nav aria-label="Page navigation example">
+	<nav aria-label="Page navigation">
 	  <ul class="pagination">
 		<li class="page-item"><a id="pageprev" class="page-link" href=# data-page="1" onclick="loadpage('prev');">Prev</a></li>
-		<li class="page-item"><a id="pageno" class="page-link" style="pointer-events: none;">Page 1 of 10</a></li>
+		<li class="page-item"><a id="pageno" class="page-link" style="pointer-events: none;">Page 1 of 1</a></li>
 		<li class="page-item"><a id="pagenext" class="page-link" href=# data-page="2" onclick="loadpage('next');">Next</a> </li>
 	  </ul>
 	</nav>
