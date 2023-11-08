@@ -96,9 +96,6 @@ function load_posts(page = 1) {
 }
 function load_userposts(userid) {
 	x = document.querySelector('#posts-list');
-	//~ let isprofile = false;
-	//~ if (document.getElementById("ProfileURL") == null)
-		//~ isprofile=true;
 	if(x){	
 		x.innerHTML = "";
 		fetch(`/${userid}`)			
@@ -106,12 +103,11 @@ function load_userposts(userid) {
 		.then(posts => {
 			posts.forEach(function(post) {disaply_post(post, true)});
 			});
-		//~ document.getElementById("head").innerHTML = "User Posts";	
 	}	
 }
 function disaply_post(post, isprofile){
 	
-	postdate = post.post_date; //new Date(post.date).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"});
+	postdate = post.post_date; 
 	x = document.querySelector('#posts-list');	
 	liketype = ""
 	if(post.liked){
@@ -150,16 +146,6 @@ function disaply_post(post, isprofile){
 				
 				</div>`;
 	 
-	 	//~ x.innerHTML += `<div class="post">
-				//~ <hr/>
-						//~ <div class="col-sm"> ${namelink} </div>
-						//~ <div class="col-sm"> ${post.content} </div>
-						//~ <div class="col-sm colright"> ${postdate} </div>
-						//~ <div id="div${post.id}" class="col-sm colright"> ${post.likes} </div>
-						//~ <div class="col-sm colright">${likeml}</div>
-				
-				//~ </div>`;
-
 	if (isprofile == false){
 		as = document.getElementById('a'+post.id);
 		profileURL = document.getElementById("ProfileURL").getAttribute("data-url");
@@ -169,7 +155,6 @@ function disaply_post(post, isprofile){
 }
 
 function toggleLike(element){
-	//~ return false;
 	like = element.getAttribute('data-like');
 	fetch('/like', {
 		method: 'PUT',
@@ -180,7 +165,7 @@ function toggleLike(element){
 		})
 	})
 	.then(response => response.json())
-	.then (data => setLike(element, data.likes)); //alert(likes.likes);return false;})
+	.then (data => setLike(element, data.likes)); 
 	
 }	
 function toggleFollow(element){
@@ -224,22 +209,6 @@ function setLike(element, likes){
 		element.innerHTML = 'Like';
 		element.setAttribute('data-like', 1);
 	}
-		
-	//~ like = element.getAttribute('data-like');
-	//~ countdiv = document.getElementById('div'+element.getAttribute('data-postid'))
-	//~ count = parseInt(countdiv.innerHTML);
-	//~ if(like == 1){
-		//~ element.setAttribute('data-like', 0);
-		//~ element.innerHTML = 'Unlike';
-		//~ count += 1;
-	//~ }
-	//~ else{
-		//~ element.setAttribute('data-like', 1);
-		//~ element.innerHTML = 'Like';		
-		//~ count -= 1;
-	//~ }	
-	//~ countdiv.innerHTML = count;
-
 }
 function edit(element){
 	postid = element.getAttribute('data-postid');

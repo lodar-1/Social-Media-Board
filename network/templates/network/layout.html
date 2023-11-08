@@ -43,6 +43,13 @@
           </nav>
         
         <div class="body">
+			{% for message in messages %}
+				<div class="container-fluid p-0">
+				  <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+					{{ message }}
+				  </div>
+				</div>
+			{% endfor %}  			
             {% block body %}
             {% endblock %}
             {% block script %}

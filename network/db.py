@@ -43,11 +43,9 @@ def returnPosts (userid = -1, byuserid = None, following=False):
                         inner join network_follow f on f.user_id = {userid} and f.following_id = p.user_id 
 						group by p.id,p.content,p.post_date,p.user_id,u.username
 						order by p.id desc"""
-	# ~ print(q)
 	cursor.execute(q)
 	result = dictfetchall(cursor)
 	cursor.close()		
-	# ~ print(result);
 	return result
 
 def toggleLike (userid,postid, like=True):
@@ -56,16 +54,13 @@ def toggleLike (userid,postid, like=True):
 		q=f"""insert into network_likes(post_id, user_id) 
 			values ({postid},{userid})"""
 	else:
-		# ~ print('DELETE')
 		q=f"delete from network_likes where post_id = {postid} and user_id = {userid}"
-		# ~ print(q)
 	result = cursor.execute(q)
 # return post like count
 	q=f"select count(post_id) likes from network_likes where post_id = {postid}"	
 	cursor.execute(q)
 	result = dictfetchall(cursor)
 	cursor.close()	
-#	sreturn = '{"result":"success"}'
 	return {
 			"likes": result[0]['likes']
 		}	
@@ -76,9 +71,7 @@ def toggleFollow (userid, followuser, follow):
 		q=f"""insert into network_follow(following_id, user_id) 
 			values ({followuser},{userid})"""
 	else:
-		# ~ print('DELETE')
 		q=f"delete from network_follow where following_id = {followuser} and user_id = {userid}"
-		# ~ print(q)
 	result = cursor.execute(q)
 	cursor.close()	
 	return result
@@ -107,7 +100,6 @@ def returnFollow(userid):
 	result = dictfetchall(cursor)
 	cursor.close()	
 	follows = result[0]		
-	print(follows['username'])
 	return {
 		"username": follows['username'],
 		"following": follows['following'],
