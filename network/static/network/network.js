@@ -200,7 +200,7 @@ function setFollow(element){
 }
 function setLike(element, likes){
 	countdiv = document.getElementById('div'+element.getAttribute('data-postid'));
-	countdiv.innerHTML = "likes " + likes;
+	countdiv.innerHTML = "likes: " + likes;
 	if(element.innerHTML == 'Like'){
 		element.innerHTML = 'Unlike';
 		element.setAttribute('data-like', 0)
